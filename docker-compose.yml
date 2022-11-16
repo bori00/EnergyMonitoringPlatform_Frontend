@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+
+  react:
+    image: energy-utility-frontend
+    ports:
+       - "80:80"
+
