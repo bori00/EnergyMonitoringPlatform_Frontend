@@ -145,6 +145,7 @@ function ManageUserModal(props) {
                                touched={formControls.userName.touched ? 1 : 0}
                                valid={formControls.userName.valid}
                                required
+                               readOnly
                         />
                         {formControls.userName.touched && !formControls.userName.valid &&
                         <div className={"error-message"}>{formControls.userName.errorMessages.join('. ')}</div>}
