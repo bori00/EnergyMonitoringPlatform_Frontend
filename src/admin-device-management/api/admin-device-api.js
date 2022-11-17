@@ -36,10 +36,13 @@ function deleteDevice(callback, device_id) {
     RestApiClient.performRequestWithNoResponse(request, callback);
 }
 
-function updateDevice(callback, device_id, name, userName) {
-    const body = {"id": device_id, "name": name, "userName": userName};
-
-    console.log(body)
+function updateDevice(callback, device_id, name, userName, maxHourlyConsumption, description, address) {
+    const body = {"id": device_id,
+        name: name,
+        userName: userName,
+        maxEnergyConsumption: maxHourlyConsumption,
+        description: description,
+        address: address};
 
     const request = new Request(HOST.backend_api + endpoint.updateDevice, {
         method: 'PUT',
@@ -53,8 +56,12 @@ function updateDevice(callback, device_id, name, userName) {
     RestApiClient.performRequestWithNoResponse(request, callback);
 }
 
-function createDevice(callback, name, userName) {
-    const body = {"name": name, "userName": userName};
+function createDevice(callback, name, userName, maxHourlyConsumption, description, address) {
+    const body = {"name": name,
+        "userName": userName,
+        "maxEnergyConsumption": maxHourlyConsumption,
+        "description": description,
+        "address": address};
 
     console.log(body)
 

@@ -11,6 +11,7 @@ import * as API_DEVICES from "./api/admin-device-api";
 import APIResponseErrorMessage from "../commons/errorhandling/api-response-error-message";
 import ManageDeviceModal from "./manage-device-modal";
 import CreateDeviceModal from "./add-device-modal";
+import de from "react-datepicker";
 
 function AdminDeviceList() {
 
@@ -20,6 +21,7 @@ function AdminDeviceList() {
     const [addDeviceIntention, setAddDeviceIntention] = useState(0);
 
     function deviceSelected(device) {
+        console.log("Selected device: ", device)
         setSelectedDevice(device)
     }
 
@@ -35,10 +37,16 @@ function AdminDeviceList() {
                     devices.push(
                         <ListGroupItem key={device.id} action onClick={() => deviceSelected(device)}>
                             <ListGroupItemHeading>{device.name}</ListGroupItemHeading>
-                            <ListGroupItemText>{device.userName}</ListGroupItemText>
+                            <ListGroupItemText><i>Owner: {device.userName}</i></ListGroupItemText>
+                            {device.address !== null && device.address !== "" &&
+                                <ListGroupItemText><i>Address: {device.address}</i></ListGroupItemText>
+                            }
+                            {device.description !== null && device.description !== "" &&
+                                <ListGroupItemText>{device.description}</ListGroupItemText>
+                            }
                         </ListGroupItem>
                     )
-                })
+                });
 
                 setDevices(devices);
             } else {

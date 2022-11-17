@@ -32,6 +32,37 @@ let formControlsInit = {
         valid: false,
         validationRules: {
         },
+    },
+    maxHourlyConsumption: {
+        value: "100",
+        placeholder: 'Max hourly energy consumption...',
+        valid: false,
+        touched: false,
+        validationRules: {
+            isRequired: true,
+            minValue: 0
+        },
+        errorMessages: []
+    },
+    description: {
+        value: null,
+        placeholder: 'Description...',
+        valid: false,
+        touched: false,
+        validationRules: {
+            maxLength: 1000
+        },
+        errorMessages: []
+    },
+    address: {
+        value: null,
+        placeholder: 'Address...',
+        valid: false,
+        touched: false,
+        validationRules: {
+            maxLength: 200
+        },
+        errorMessages: []
     }
 };
 
@@ -62,6 +93,14 @@ function ManageDeviceModal(props) {
                 newFormControls.name.valid = true;
                 newFormControls.userName.value = device.userName;
                 newFormControls.userName.valid = true;
+                newFormControls.maxHourlyConsumption.value = device.maxEnergyConsumption;
+                newFormControls.maxHourlyConsumption.valid = true;
+                newFormControls.description.value = device.description;
+                newFormControls.description.valid = true;
+                newFormControls.address.value = device.address;
+                newFormControls.address.valid = true;
+
+                console.log(newFormControls.maxHourlyConsumption)
 
                 setFormControls(newFormControls);
 
@@ -93,7 +132,7 @@ function ManageDeviceModal(props) {
         }
     }
 
-    function updateDevice(name, userName) {
+    function updateDevice(name, userName, maxHourlyConsumption, description, address) {
         if (window.confirm("Are you sure you want to update device " + device.name + "?")) {
             const callback = (err) => {
                 if (err === null) {
@@ -104,7 +143,7 @@ function ManageDeviceModal(props) {
                 }
             };
 
-            API_DEVICES.updateDevice(callback, device.id, name, userName);
+            API_DEVICES.updateDevice(callback, device.id, name, userName, maxHourlyConsumption, description, address);
         }
     }
 
@@ -120,8 +159,6 @@ function ManageDeviceModal(props) {
         updatedFormElement.valid = validation_result.valid;
         updatedFormElement.errorMessages = validation_result.errorMessages;
         updatedControls[name] = updatedFormElement;
-
-        console.log(updatedControls)
 
         let formIsValid = true;
         for (let updatedFormElementName in updatedControls) {
@@ -147,7 +184,11 @@ function ManageDeviceModal(props) {
     }
 
     function handleSubmit() {
-        updateDevice(formControls.name.value, formControls.userName.value)
+        updateDevice(formControls.name.value,
+            formControls.userName.value,
+            formControls.maxHourlyConsumption.value,
+            formControls.description.value,
+            formControls.address.value)
     }
 
     return (
@@ -173,10 +214,52 @@ function ManageDeviceModal(props) {
                             <Label for='ownerField'>Owner: </Label>
                             <Select options={formControls.userName.possibleValues}
                                     name="ownerField"
-                                    defaultValue={getValueLabelDictionary(formControls.userName.value)}
+                                    value={getValueLabelDictionary(formControls.userName.value)}
                                     isClearable={0}
                                     onChange={handleOwnerChange}
                             />
+                        </FormGroup>
+
+                        <FormGroup id='maxHourlyEnergyConsumption'>
+                            <Label for='consumptionField'>Maximum hourly energy consumption: </Label>
+                            <Input name='maxHourlyConsumption' id='consumptionField' placeholder={formControls.maxHourlyConsumption.placeholder}
+                                   onChange={handleChange}
+                                   type="number"
+                                   value={formControls.maxHourlyConsumption.value}
+                                   touched={formControls.maxHourlyConsumption.touched ? 1 : 0}
+                                   valid={formControls.maxHourlyConsumption.valid}
+                                   min="0"
+                                   required
+                            />
+                            {formControls.maxHourlyConsumption.touched && !formControls.maxHourlyConsumption.valid &&
+                            <div className={"error-message"}>{formControls.maxHourlyConsumption.errorMessages.join('. ')}</div>}
+                        </FormGroup>
+
+                        <FormGroup id='description'>
+                            <Label for='descriptionField'>Description: </Label>
+                            <Input name='description' id='descriptionField' placeholder={formControls.description.placeholder}
+                                   onChange={handleChange}
+                                   type="textarea"
+                                   defaultValue={formControls.description.value}
+                                   touched={formControls.description.touched ? 1 : 0}
+                                   valid={formControls.description.valid}
+                                   required
+                            />
+                            {formControls.description.touched && !formControls.description.valid &&
+                            <div className={"error-message"}>{formControls.description.errorMessages.join('. ')}</div>}
+                        </FormGroup>
+
+                        <FormGroup id='address'>
+                            <Label for='addressField'>Address: </Label>
+                            <Input name='address' id='addressField' placeholder={formControls.address.placeholder}
+                                   onChange={handleChange}
+                                   defaultValue={formControls.address.value}
+                                   touched={formControls.address.touched ? 1 : 0}
+                                   valid={formControls.address.valid}
+                                   required
+                            />
+                            {formControls.address.touched && !formControls.address.valid &&
+                            <div className={"error-message"}>{formControls.address.errorMessages.join('. ')}</div>}
                         </FormGroup>
 
                         <Row>

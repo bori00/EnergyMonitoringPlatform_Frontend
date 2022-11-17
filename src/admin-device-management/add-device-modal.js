@@ -33,6 +33,37 @@ let formControlsInit = {
         valid: false,
         validationRules: {
         },
+    },
+    maxHourlyConsumption: {
+        value: 0,
+        placeholder: 'Max hourly energy consumption...',
+        valid: true,
+        touched: false,
+        validationRules: {
+            isRequired: true,
+            minValue: 0
+        },
+        errorMessages: []
+    },
+    description: {
+        value: null,
+        placeholder: 'Description...',
+        valid: true,
+        touched: false,
+        validationRules: {
+            maxLength: 1000
+        },
+        errorMessages: []
+    },
+    address: {
+        value: null,
+        placeholder: 'Address...',
+        valid: true,
+        touched: false,
+        validationRules: {
+            maxLength: 200
+        },
+        errorMessages: []
     }
 };
 
@@ -77,17 +108,17 @@ function CreateDeviceModal(props) {
         props.onClose();
     }
 
-    function createDevice(name, userName) {
+    function createDevice(name, userName, maxHourlyConsumption, description, address) {
         const callback = (error) => {
             if (error === null) {
                 setSuccess(1);
             } else {
                 console.log(error)
-                setError((error) => ({status: error.status, errorMessage: error}));
+                setError({status: error.status, errorMessage: error});
             }
         };
 
-        API_DEVICES.createDevice(callback, name, userName);
+        API_DEVICES.createDevice(callback, name, userName, maxHourlyConsumption, description, address);
     }
 
     function handleFormChange(name, value) {
@@ -129,7 +160,11 @@ function CreateDeviceModal(props) {
     }
 
     function handleSubmit() {
-        createDevice(formControls.name.value, formControls.userName.value)
+        createDevice(formControls.name.value,
+            formControls.userName.value,
+            formControls.maxHourlyConsumption.value,
+            formControls.description.value,
+            formControls.address.value)
     }
 
     return (
@@ -159,6 +194,48 @@ function CreateDeviceModal(props) {
                                 isClearable={0}
                                 onChange={handleOwnerChange}
                         />
+                    </FormGroup>
+
+                    <FormGroup id='maxHourlyEnergyConsumption'>
+                        <Label for='consumptionField'>Maximum hourly energy consumption: </Label>
+                        <Input name='maxHourlyConsumption' id='consumptionField' placeholder={formControls.maxHourlyConsumption.placeholder}
+                               onChange={handleChange}
+                               type="number"
+                               defaultValue={formControls.maxHourlyConsumption.value}
+                               touched={formControls.maxHourlyConsumption.touched ? 1 : 0}
+                               valid={formControls.maxHourlyConsumption.valid}
+                               min="0"
+                               required
+                        />
+                        {formControls.maxHourlyConsumption.touched && !formControls.maxHourlyConsumption.valid &&
+                        <div className={"error-message"}>{formControls.maxHourlyConsumption.errorMessages.join('. ')}</div>}
+                    </FormGroup>
+
+                    <FormGroup id='description'>
+                        <Label for='descriptionField'>Description: </Label>
+                        <Input name='description' id='descriptionField' placeholder={formControls.description.placeholder}
+                               onChange={handleChange}
+                               type="textarea"
+                               defaultValue={formControls.description.value}
+                               touched={formControls.description.touched ? 1 : 0}
+                               valid={formControls.description.valid}
+                               required
+                        />
+                        {formControls.description.touched && !formControls.description.valid &&
+                        <div className={"error-message"}>{formControls.description.errorMessages.join('. ')}</div>}
+                    </FormGroup>
+
+                    <FormGroup id='address'>
+                        <Label for='addressField'>Address: </Label>
+                        <Input name='address' id='addressField' placeholder={formControls.address.placeholder}
+                               onChange={handleChange}
+                               defaultValue={formControls.address.value}
+                               touched={formControls.address.touched ? 1 : 0}
+                               valid={formControls.address.valid}
+                               required
+                        />
+                        {formControls.address.touched && !formControls.address.valid &&
+                        <div className={"error-message"}>{formControls.address.errorMessages.join('. ')}</div>}
                     </FormGroup>
 
                     <Row>
