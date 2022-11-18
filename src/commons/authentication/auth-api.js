@@ -60,6 +60,13 @@ function getCurrentUserRole() {
      return null;
 }
 
+function getCurrentUserName() {
+    if (localStorage.getItem(USER_KEY) !== null) {
+        return  JSON.parse(localStorage.getItem('user')).userName;
+    }
+    return null;
+}
+
 function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user && user.accessToken) {
@@ -85,5 +92,6 @@ export {
     getCurrentUser,
     getCurrentUserRole,
     authHeader,
-    guaranteeUserHasRole
+    guaranteeUserHasRole,
+    getCurrentUserName
 };

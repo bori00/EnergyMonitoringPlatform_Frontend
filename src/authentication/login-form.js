@@ -67,8 +67,9 @@ function LoginForm() {
                         API_SOCKET.subscribeToClientSocket();
                     }
 
-                   // history.push("/");
-                   // window.location.reload();
+                    // todo
+                    // history.push("/");
+                    // window.location.reload();
                 })
             } else {
                 setError({ status: err.status, errorMessage: err });

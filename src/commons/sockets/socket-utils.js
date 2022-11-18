@@ -2,6 +2,8 @@ import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import * as HOST from "../hosts";
 
+import * as AUTH_API from "../authentication/auth-api";
+
 function subscribeToClientSocket() {
     var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
     // var socket = new WebSocket("ws://localhost:8080/secured/energy-utility");
@@ -12,11 +14,7 @@ function subscribeToClientSocket() {
 
     stompClient.connect({},
         /* onConnected */ function (frame) {
-            stompClient.subscribe("/topic/device",
-                function () {
-                    window.alert("Notification from server 1 ");
-                });
-            stompClient.subscribe("/user/topic/device",
+            stompClient.subscribe("/user/" + AUTH_API.getCurrentUserName() + "/queue/device",
                 function () {
                     window.alert("Notification from server 2");
                 });
