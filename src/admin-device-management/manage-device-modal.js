@@ -10,7 +10,6 @@ import Select from 'react-select'
 
 import * as API_DEVICES from "./api/admin-device-api";
 import APIResponseErrorMessage from "../commons/errorhandling/api-response-error-message";
-import styles from "../commons/styles/project-style.css";
 import Validate from "../commons/validators/validators";
 
 let formControlsInit = {

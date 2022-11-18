@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import APIResponseErrorMessage from "../commons/errorhandling/api-response-error-message";
 import * as API_AUTH from "../commons/authentication/auth-api";
 import Validate from "./validators/user-login-validators";
+import * as API_SOCKET from "../commons/sockets/socket-utils";
 
 const formControlsInit = {
     userName: {
@@ -62,8 +63,12 @@ function LoginForm() {
         const callback = (result, status, err) => {
             if (result !== null && (status === 200 || status === 201)) {
                 API_AUTH.setActiveUser(result, () => {
-                   history.push("/");
-                   window.location.reload();
+                    if (result.role === "CLIENT") {
+                        API_SOCKET.subscribeToClientSocket();
+                    }
+
+                   // history.push("/");
+                   // window.location.reload();
                 })
             } else {
                 setError({ status: err.status, errorMessage: err });

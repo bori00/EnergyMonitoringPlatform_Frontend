@@ -1,5 +1,6 @@
 import {HOST} from "../hosts";
 import RestApiClient from "../api/rest-client";
+import * as API_SOCKET from "../sockets/socket-utils";
 
 const endpoint = {
     login: '/auth/login'
