@@ -4,7 +4,7 @@ import * as HOST from "../hosts";
 
 import * as AUTH_API from "../authentication/auth-api";
 
-function subscribeToClientSocket() {
+function subscribeToClientNotifications() {
     var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
     // var socket = new WebSocket("ws://localhost:8080/secured/energy-utility");
     var stompClient = Stomp.over(socket);
@@ -15,20 +15,28 @@ function subscribeToClientSocket() {
     stompClient.connect({},
         /* onConnected */ function (frame) {
             stompClient.subscribe("/user/" + AUTH_API.getCurrentUserName() + "/queue/device",
-                function () {
-                    window.alert("Notification from server 2");
-                });
+                onDeviceEnergyConsumptionThresholdPassed);
             window.alert("You were successfully subscribed to the notifications about your" +
                 " devices' consumption")
         },
         /* onError */
         function (frame) {
-            window.alert("Error: You couldn't be subscribed to the notifications about your" +
-                " devices' consumption")
+            window.alert("Error: Your subscription to notifications about your devices'" +
+                " consumption FAILED")
         }
     );
 }
 
+function onDeviceEnergyConsumptionThresholdPassed(message) {
+    window.alert("Notification from server: " + message);
+}
+
+function setupRoleSpecificNotifications() {
+    if (AUTH_API.getCurrentUserRole() === "CLIENT") {
+        subscribeToClientNotifications();
+    }
+}
+
 export {
-    subscribeToClientSocket
+    setupRoleSpecificNotifications
 };

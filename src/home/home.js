@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Button, Container, Jumbotron } from 'reactstrap';
 
 import BackgroundImg from '../commons/images/background.png';
+import * as API_NOTIFICATIONS from "../commons/sockets/socket-utils";
 
 const backgroundStyle = {
     backgroundPosition: 'center',
@@ -14,6 +15,11 @@ const backgroundStyle = {
 const textStyle = { color: 'white', };
 
 function Home() {
+
+    useEffect(() => {
+        API_NOTIFICATIONS.setupRoleSpecificNotifications();
+    });
+
     return (
         <div>
             <Jumbotron fluid style={backgroundStyle}>

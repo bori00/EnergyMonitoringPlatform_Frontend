@@ -63,13 +63,8 @@ function LoginForm() {
         const callback = (result, status, err) => {
             if (result !== null && (status === 200 || status === 201)) {
                 API_AUTH.setActiveUser(result, () => {
-                    if (result.role === "CLIENT") {
-                        API_SOCKET.subscribeToClientSocket();
-                    }
-
-                    // todo
-                    // history.push("/");
-                    // window.location.reload();
+                    history.push("/");
+                    window.location.reload();
                 })
             } else {
                 setError({ status: err.status, errorMessage: err });
