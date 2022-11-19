@@ -28,7 +28,10 @@ function subscribeToClientNotifications() {
 }
 
 function onDeviceEnergyConsumptionThresholdPassed(message) {
-    window.alert("Notification from server: " + message);
+    const anomalyDTO = JSON.parse(message.body);
+    window.alert("Anomaly detected: The hourly energy consumption of device " + anomalyDTO.deviceName + " passed the preset threshold. Please verify that the device is working as intended!\n" +
+    "Hourly energy consumption: " + anomalyDTO.hourlyEnergyConsumption + "\n" +
+    "Threshold: " + anomalyDTO.hourlyEnergyConsumptionLimit);
 }
 
 function setupRoleSpecificNotifications() {
