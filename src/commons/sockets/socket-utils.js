@@ -6,15 +6,15 @@ import * as AUTH_API from "../authentication/auth-api";
 
 function subscribeToClientNotifications() {
     var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
-    // var socket = new WebSocket("ws://localhost:8080/secured/energy-utility");
     var stompClient = Stomp.over(socket);
-    var sessionId = "";
 
     console.log("Socket setup")
 
     stompClient.connect({},
         /* onConnected */ function (frame) {
-            stompClient.subscribe("/user/" + AUTH_API.getCurrentUserName() + "/queue/device",
+            stompClient.subscribe("/user/" +
+                AUTH_API.getCurrentUserName() +
+                "/queue/device-energy-consumption-threshold-passed",
                 onDeviceEnergyConsumptionThresholdPassed);
             window.alert("You were successfully subscribed to the notifications about your" +
                 " devices' consumption")
