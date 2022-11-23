@@ -42,6 +42,7 @@ function ClientDeviceList() {
 
     return (
         <Fragment>
+            <h3>My Devices</h3>
             <ListGroup>
                 {devices}
             </ListGroup>

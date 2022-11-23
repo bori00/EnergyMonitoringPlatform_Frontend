@@ -4,11 +4,9 @@ import * as HOST from "../hosts";
 
 import * as AUTH_API from "../authentication/auth-api";
 
-function subscribeToClientNotifications() {
+function subscribeToClientDeviceAnomalyNotifications() {
     var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
     var stompClient = Stomp.over(socket);
-
-    console.log("Socket setup")
 
     stompClient.connect({},
         /* onConnected */ function (frame) {
@@ -17,14 +15,39 @@ function subscribeToClientNotifications() {
                 "/queue/device-energy-consumption-threshold-passed",
                 onDeviceEnergyConsumptionThresholdPassed);
             window.alert("You were successfully subscribed to the notifications about your" +
-                " devices' consumption")
+                " devices' consumption ANOMALIES")
         },
         /* onError */
         function (frame) {
             window.alert("Error: Your subscription to notifications about your devices'" +
-                " consumption FAILED")
+                " consumption ANOMALIES FAILED")
         }
     );
+}
+
+function subscribeToClientDeviceConsumptionUpdateNotifications (onUpdateCallback) {
+    var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({},
+        /* onConnected */ function (frame) {
+            stompClient.subscribe("/user/" +
+                AUTH_API.getCurrentUserName() +
+                "/queue/device-energy-consumption-update",
+                onUpdateCallback);
+            window.alert("You were successfully subscribed to the notifications about your" +
+                " devices' consumption UPDATES")
+        },
+        /* onError */
+        function (frame) {
+            window.alert("Error: Your subscription to notifications about your devices'" +
+                " consumption UPDATES FAILED")
+        }
+    );
+}
+
+function subscribeToClientNotifications() {
+    subscribeToClientDeviceAnomalyNotifications();
 }
 
 function onDeviceEnergyConsumptionThresholdPassed(message) {
@@ -41,5 +64,6 @@ function setupRoleSpecificNotifications() {
 }
 
 export {
-    setupRoleSpecificNotifications
+    setupRoleSpecificNotifications,
+    subscribeToClientDeviceConsumptionUpdateNotifications
 };
