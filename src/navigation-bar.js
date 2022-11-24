@@ -76,7 +76,9 @@ function NavigationBar() {
                                         <NavLink href="/client-devices-monitoring">My Devices</NavLink>
                                     </DropdownItem>
 
-
+                                    <DropdownItem>
+                                        <NavLink href="/client-consumption-monitoring">Consumption Updates</NavLink>
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
 

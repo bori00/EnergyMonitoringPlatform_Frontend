@@ -14,6 +14,8 @@ import AdminUserManagementContainer
     from "./admin-user-management/admin-user-management-container";
 import ClientDeviceMonitoringContainer
     from "./client-device-monitoring/client-device-monitoring-container";
+import ClientConsumptionMonitoringContainer
+    from "./client-consumption-monitoring/client-consumption-monitoring-container";
 
 function App() {
     return (
@@ -63,6 +65,12 @@ function App() {
                             exact
                             path='/client-devices-monitoring'
                             render={() => <ClientDeviceMonitoringContainer />}
+                        />
+
+                        <Route
+                            exact
+                            path='/client-consumption-monitoring'
+                            render={() => <ClientConsumptionMonitoringContainer />}
                         />
 
                         {/*Error*/}
