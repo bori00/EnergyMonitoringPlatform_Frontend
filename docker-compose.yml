@@ -4,6 +4,7 @@ services:
 
   react:
     image: energy-utility-frontend
+    domainname: "energy-utility-bori00"
     ports:
        - "80:80"
 
