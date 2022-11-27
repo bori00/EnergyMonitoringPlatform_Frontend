@@ -3,8 +3,7 @@ version: '3'
 services:
 
   react:
-    image: energyutilityfrontend
-    container_name: energyutilityfrontend
+    image: energy-utility-frontend
     domainname: "energy-utility-bori00"
     ports:
        - "80:80"
