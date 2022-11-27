@@ -1,3 +1,3 @@
 export const HOST = {
-    backend_api: 'http://localhost:8080',
+    backend_api: 'http://http://energy-utility-backend-bori00.germanywestcentral.azurecontainer.io:8080',
 };
