@@ -14,10 +14,10 @@ pool:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'c3bb4453-4c6d-49c6-8191-5e4222cc7aee'
-  imageRepository: 'energyutilityfrontend'
+  imageRepository: 'energy-utility-backend-image'
   containerRegistry: 'containerregistryborifazakas30411.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
   # Agent VM image name
   vmImageName: 'bori-VirtualBox'

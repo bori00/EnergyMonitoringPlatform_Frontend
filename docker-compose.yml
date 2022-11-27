@@ -3,7 +3,7 @@ version: '3'
 services:
 
   react:
-    image: energy-utility-frontend
+    image: containerregistryborifazakas30411.azurecr.io/energy-utility-backend-image:latest
     domainname: "energy-utility-bori00"
     ports:
        - "80:80"
