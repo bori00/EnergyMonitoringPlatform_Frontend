@@ -3,7 +3,7 @@ version: '3'
 services:
 
   frontend:
-    image: containerregistryborifazakas30411.azurecr.io/energy-utility-backend-image:latest
+    image: containerregistryborifazakas30411.azurecr.io/energy-utility-frontend-image:latest
     domainname: "energy-utility-bori00"
     container_name: energy-utility-frontend-container
     ports:
