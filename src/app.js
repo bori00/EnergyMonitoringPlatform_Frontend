@@ -16,6 +16,8 @@ import ClientDeviceMonitoringContainer
     from "./client-device-monitoring/client-device-monitoring-container";
 import ClientConsumptionMonitoringContainer
     from "./client-consumption-monitoring/client-consumption-monitoring-container";
+import ClientChatContainer from "./client-chat/client-chat-container";
+import AdminChatContainer from "./admin-chat/admin-chat-container";
 
 function App() {
     return (
@@ -71,6 +73,18 @@ function App() {
                             exact
                             path='/client-consumption-monitoring'
                             render={() => <ClientConsumptionMonitoringContainer />}
+                        />
+
+                        <Route
+                            exact
+                            path='/client-chat'
+                            render={() => <ClientChatContainer />}
+                        />
+
+                        <Route
+                            exact
+                            path='/admin-chat'
+                            render={() => <AdminChatContainer />}
                         />
 
                         {/*Error*/}

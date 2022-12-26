@@ -36,14 +36,17 @@ function NavigationBar() {
                                     </DropdownToggle>
                                     <DropdownMenu right>
 
-                                    <DropdownItem>
-                                        <NavLink href="/admin-device-management">Devices</NavLink>
-                                    </DropdownItem>
+                                        <DropdownItem>
+                                            <NavLink href="/admin-device-management">Devices</NavLink>
+                                        </DropdownItem>
 
-                                    <DropdownItem>
-                                        <NavLink href="/admin-user-management">Users</NavLink>
-                                    </DropdownItem>
+                                        <DropdownItem>
+                                            <NavLink href="/admin-user-management">Users</NavLink>
+                                        </DropdownItem>
 
+                                        <DropdownItem>
+                                            <NavLink href="/admin-chat">Client Assistance</NavLink>
+                                        </DropdownItem>
 
                                     </DropdownMenu>
                                 </UncontrolledDropdown>
@@ -78,6 +81,10 @@ function NavigationBar() {
 
                                     <DropdownItem>
                                         <NavLink href="/client-consumption-monitoring">Consumption Updates</NavLink>
+                                    </DropdownItem>
+
+                                    <DropdownItem>
+                                        <NavLink href="/client-chat">Chat with us!</NavLink>
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
