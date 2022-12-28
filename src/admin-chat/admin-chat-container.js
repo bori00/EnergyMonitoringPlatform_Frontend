@@ -34,11 +34,14 @@ function AdminChatContainer() {
     function onAcceptOpenChatSessionRequest(openSessionRequest) {
         const callback = (err, response) => {
             console.log("Accept Open Session Request -> Status = ", err, response)
-            if (err === null && response.getSuccessful() === true) {
+            if (err === null) {
                 console.log("Removing request")
                 let updatedIncomingRequests = incomingRequestsFromClientsRef.current.map(r => r)
                 updatedIncomingRequests.splice (incomingRequestsFromClients.indexOf(openSessionRequest), 1) // remove request
                 setIncomingRequestsFromClients(updatedIncomingRequests)
+            }
+            if (err === null && response.getSuccessful() === false) {
+                window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established: " + response.getErrormessage())
             }
         };
 
