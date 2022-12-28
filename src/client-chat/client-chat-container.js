@@ -1,12 +1,13 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {Card, CardHeader, Col, Row, Button } from 'reactstrap';
+import { Dots } from 'loading-animations-react';
 
 import * as API_NOTIFICATIONS from "../commons/sockets/socket-utils"
 import * as API_AUTH from "../commons/authentication/auth-api";
 import {useHistory} from "react-router-dom";
 import * as API_CLIENT_CHAT from "./api/client-chat-api"
 import APIResponseErrorMessage from "../commons/errorhandling/api-response-error-message";
-import { Dots } from 'loading-animations-react';
+import CustomChatContainer from "../chat/chat-container";
 
 function ClientChatContainer() {
 
@@ -14,6 +15,8 @@ function ClientChatContainer() {
     const [sentOpenSessionRequest, setSentOpenSessionRequest] = useState(false);
     const [sessionIsOpen, setSessionIsOpen] = useState(false);
     const [error, setError] = useState({ status: 0, errorMessage: null });
+    const [messages, setMessages] = useState([]);
+    const [recipientIsTyping, setRecipientIsTyping] = useState(false)
 
     useEffect(() => {
         API_NOTIFICATIONS.setupRoleSpecificNotifications();
@@ -62,7 +65,11 @@ function ClientChatContainer() {
 
                         {
                             sessionIsOpen === true &&
-                            <h1>Chat Session</h1>
+                            <Fragment>
+                                <h1>Chat Session</h1>
+
+                                <CustomChatContainer recipientName="admin"/>
+                            </Fragment>
                         }
 
                         {

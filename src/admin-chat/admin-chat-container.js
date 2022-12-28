@@ -5,6 +5,7 @@ import * as API_NOTIFICATIONS from "../commons/sockets/socket-utils"
 import * as API_AUTH from "../commons/authentication/auth-api";
 import {useHistory} from "react-router-dom";
 import * as API_ADMIN_CHAT from "./api/admin-chat-api";
+import CustomChatContainer from "../chat/chat-container";
 
 function AdminChatContainer() {
 
@@ -12,6 +13,9 @@ function AdminChatContainer() {
     const [incomingRequestsFromClients, setIncomingRequestsFromClients] = useState([]);
     const incomingRequestsFromClientsRef = useRef();
     incomingRequestsFromClientsRef.current = incomingRequestsFromClients;
+    const [openSessionClientNames, setOpenSessionClientNames] = useState([]);
+    const openSessionClientNamesRef = useRef();
+    openSessionClientNamesRef.current = openSessionClientNames;
 
     useEffect(() => {
         API_NOTIFICATIONS.setupRoleSpecificNotifications();
@@ -39,9 +43,16 @@ function AdminChatContainer() {
                 let updatedIncomingRequests = incomingRequestsFromClientsRef.current.map(r => r)
                 updatedIncomingRequests.splice (incomingRequestsFromClients.indexOf(openSessionRequest), 1) // remove request
                 setIncomingRequestsFromClients(updatedIncomingRequests)
-            }
-            if (err === null && response.getSuccessful() === false) {
-                window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established: " + response.getErrormessage())
+
+                if (response.getSuccessful()) {
+                    let updatedOpenSessions = openSessionClientNamesRef.current.map(c => c)
+                    updatedOpenSessions.push(openSessionRequest.getFromusername())
+                    setOpenSessionClientNames(updatedOpenSessions)
+                } else {
+                    window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established: " + response.getErrormessage())
+                }
+            } else {
+                window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established")
             }
         };
 
@@ -61,6 +72,11 @@ function AdminChatContainer() {
         return incomingRequestsFromClients.map(fromUserName => openSessionRequestToListGroupItem(fromUserName, nr++))
     }
 
+    function getOpenSessionChatContainers() {
+        let key = 0;
+        return openSessionClientNames.map(clientName => <CustomChatContainer key={key++} recipientName={clientName}/>)
+    }
+
     return (
         <div>
             <CardHeader>
@@ -75,6 +91,24 @@ function AdminChatContainer() {
                         <ListGroup variant="flush">
                             {getOpenSessionRequestsList()}
                         </ListGroup>
+                    </Col>
+                </Row>
+
+                <hr/>
+
+                <Row>
+                    <Col sm={{size: '8', offset: 1}}>
+                        <h3>Open Assistance Sessions</h3>
+
+                        <div style={{
+                            display: "grid",
+                            gap: 30,
+                            maxWidth: 800,
+                            gridTemplateColumns: '49% 49%',
+                            margin: '20 auto'
+                        }}>
+                            {getOpenSessionChatContainers()}
+                        </div>
                     </Col>
                 </Row>
             </Card>
