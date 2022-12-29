@@ -16,6 +16,10 @@ function AdminChatContainer() {
     const [openSessionClientNames, setOpenSessionClientNames] = useState([]);
     const openSessionClientNamesRef = useRef();
     openSessionClientNamesRef.current = openSessionClientNames;
+    const [openSessionChatContainers, setOpenSessionChatContainers] = useState([]);
+    const openSessionChatContainersRef = useRef();
+    openSessionChatContainersRef.current = openSessionChatContainers;
+    const [nextChatId, setNextChatId] = useState(0);
 
     useEffect(() => {
         API_NOTIFICATIONS.setupRoleSpecificNotifications();
@@ -35,6 +39,10 @@ function AdminChatContainer() {
         API_ADMIN_CHAT.receiveOpenSessionRequests(callback)
     }
 
+    function recipientNameToOpenSessionChatContainer(name, key) {
+        return <CustomChatContainer key={key} recipientName={name} onSessionEndCallback={() => onSessionEnd(name)}/>
+    }
+
     function onAcceptOpenChatSessionRequest(openSessionRequest) {
         const callback = (err, response) => {
             console.log("Accept Open Session Request -> Status = ", err, response)
@@ -48,6 +56,12 @@ function AdminChatContainer() {
                     let updatedOpenSessions = openSessionClientNamesRef.current.map(c => c)
                     updatedOpenSessions.push(openSessionRequest.getFromusername())
                     setOpenSessionClientNames(updatedOpenSessions)
+
+                    let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
+                    updatedOpenSessionChatContainers.push(recipientNameToOpenSessionChatContainer(openSessionRequest.getFromusername(), nextChatId))
+                    setOpenSessionChatContainers(updatedOpenSessionChatContainers)
+
+                    setNextChatId(nextChatId+1);
                 } else {
                     window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established: " + response.getErrormessage())
                 }
@@ -72,9 +86,25 @@ function AdminChatContainer() {
         return incomingRequestsFromClients.map(fromUserName => openSessionRequestToListGroupItem(fromUserName, nr++))
     }
 
+    function onSessionEnd(clientName) {
+        console.log("Session End with client: " + clientName)
+        window.alert("The client " + clientName + " has left the session. Thus, the session is" +
+            " closed.")
+        const index = openSessionClientNamesRef.current.indexOf(clientName)
+        let updatedOpenSessionClientNames = openSessionClientNamesRef.current.map(c => c);
+        updatedOpenSessionClientNames.splice(index, 1)
+        setOpenSessionClientNames(updatedOpenSessionClientNames);
+
+        let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
+        updatedOpenSessionChatContainers.splice(index, 1)
+        setOpenSessionChatContainers(updatedOpenSessionChatContainers)
+        console.log("Removing chat container at index: " + index)
+    }
+
     function getOpenSessionChatContainers() {
         let key = 0;
-        return openSessionClientNames.map(clientName => <CustomChatContainer key={key++} recipientName={clientName}/>)
+        console.log("Open Sessions: " + openSessionClientNames)
+        return openSessionClientNames.map(clientName => <CustomChatContainer key={key++} recipientName={clientName} onSessionEndCallback={() => onSessionEnd(clientName)}/>)
     }
 
     return (
@@ -107,7 +137,7 @@ function AdminChatContainer() {
                             gridTemplateColumns: '49% 49%',
                             margin: '20 auto'
                         }}>
-                            {getOpenSessionChatContainers()}
+                            {openSessionChatContainers}
                         </div>
                     </Col>
                 </Row>

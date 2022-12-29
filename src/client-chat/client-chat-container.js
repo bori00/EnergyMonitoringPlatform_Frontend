@@ -19,7 +19,7 @@ function ClientChatContainer() {
     const [recipientIsTyping, setRecipientIsTyping] = useState(false)
 
     useEffect(() => {
-        API_NOTIFICATIONS.setupRoleSpecificNotifications();
+        // API_NOTIFICATIONS.setupRoleSpecificNotifications();
         API_AUTH.guaranteeUserHasRole('CLIENT', history);
     }, [])
 
@@ -42,6 +42,13 @@ function ClientChatContainer() {
         API_CLIENT_CHAT.sendOpenSessionRequest(callback, API_AUTH.getCurrentUserName())
 
         setSentOpenSessionRequest(true);
+    }
+
+    function onSessionEnd() {
+        console.log("Session End with admin")
+        window.alert("The admin has left the session. Thus, the session is closed.")
+        setSentOpenSessionRequest(false);
+        setSessionIsOpen(false);
     }
 
     return (
@@ -68,7 +75,7 @@ function ClientChatContainer() {
                             <Fragment>
                                 <h1>Chat Session</h1>
 
-                                <CustomChatContainer recipientName="admin"/>
+                                <CustomChatContainer recipientName="admin" onSessionEndCallback={() => onSessionEnd()}/>
                             </Fragment>
                         }
 

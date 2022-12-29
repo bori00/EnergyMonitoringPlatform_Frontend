@@ -81,13 +81,13 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ro.tuc.chat.proto_gen.ChatMessage,
- *   !proto.ro.tuc.chat.proto_gen.Status>}
+ *   !proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
  */
 const methodDescriptor_ChatService_sendMessage = new grpc.web.MethodDescriptor(
   '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
   grpc.web.MethodType.UNARY,
   proto.ro.tuc.chat.proto_gen.ChatMessage,
-  proto.ro.tuc.chat.proto_gen.Status,
+  proto.ro.tuc.chat.proto_gen.SendMessageStatus,
   /**
    * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request
    * @return {!Uint8Array}
@@ -95,7 +95,7 @@ const methodDescriptor_ChatService_sendMessage = new grpc.web.MethodDescriptor(
   function(request) {
     return request.serializeBinary();
   },
-  proto.ro.tuc.chat.proto_gen.Status.deserializeBinary
+  proto.ro.tuc.chat.proto_gen.SendMessageStatus.deserializeBinary
 );
 
 
@@ -104,9 +104,9 @@ const methodDescriptor_ChatService_sendMessage = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.ro.tuc.chat.proto_gen.Status)}
+ * @param {function(?grpc.web.RpcError, ?proto.ro.tuc.chat.proto_gen.SendMessageStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.Status>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.sendMessage =
@@ -125,7 +125,7 @@ proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.sendMessage =
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.ro.tuc.chat.proto_gen.Status>}
+ * @return {!Promise<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
  *     Promise that resolves to the response
  */
 proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessage =
@@ -141,16 +141,16 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessage =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.Empty,
+ *   !proto.ro.tuc.chat.proto_gen.ChatMessageRequest,
  *   !proto.ro.tuc.chat.proto_gen.ChatMessage>}
  */
 const methodDescriptor_ChatService_receiveMessage = new grpc.web.MethodDescriptor(
   '/ro.tuc.chat.proto_gen.ChatService/receiveMessage',
   grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.Empty,
+  proto.ro.tuc.chat.proto_gen.ChatMessageRequest,
   proto.ro.tuc.chat.proto_gen.ChatMessage,
   /**
-   * @param {!proto.ro.tuc.chat.proto_gen.Empty} request
+   * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -161,7 +161,7 @@ const methodDescriptor_ChatService_receiveMessage = new grpc.web.MethodDescripto
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}
@@ -178,7 +178,7 @@ proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessage =
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}

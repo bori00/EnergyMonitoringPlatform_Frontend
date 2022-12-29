@@ -5,7 +5,6 @@ import {ChatServiceClient} from "../../chat-proto-gen/chat_grpc_web_pb";
 
 function sendOpenSessionRequest(callback, myUserName) {
 
-    // create our greeting object
     let openSessionRequest = new OpenSessionRequest();
     openSessionRequest.setFromusername(myUserName)
 
