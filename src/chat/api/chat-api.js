@@ -1,13 +1,51 @@
 import {HOST} from "../../commons/hosts";
 import * as GRPC_HELPER from "../../commons/grpc"
-import {ChatMessage, ChatMessageRequest} from "../../chat-proto-gen/chat_pb";
+import {ChatMessage, ChatMessageRequest, UpdateRequest, MessageTypingStatus, MessageReadingStatus} from "../../chat-proto-gen/chat_pb";
 import {ChatServiceClient} from "../../chat-proto-gen/chat_grpc_web_pb";
 
-function receiveMessageReadingStatusUpdates(data_callback) {
+function receiveMessageReadingStatusUpdates(data_callback, userName, partnerUserName) {
 
-    // const client = new ChatServiceClient(HOST.grpc_api);
-    // const call = client.receiveOpenSessionRequest(new Empty(), {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
-    // call.on('data', data_callback);
+    let updateRequest = new UpdateRequest();
+    updateRequest.setRequestsendername(userName)
+    updateRequest.setPartnername(partnerUserName)
+
+    const client = new ChatServiceClient(HOST.grpc_api);
+    const call = client.receiveMessageReadingStatusUpdates(updateRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
+    call.on('data', data_callback);
+}
+
+function sendMessageReadingStatus(callback, readerUserName, recipientName) {
+    let messageReadingStatus = new MessageReadingStatus();
+    messageReadingStatus.setReaderusername(readerUserName);
+    messageReadingStatus.setSenderusername(recipientName);
+
+    // create gRPC client that will call ou java server
+    const client = new ChatServiceClient(HOST.grpc_api)
+        .sendMessageReadingStatusUpdate(messageReadingStatus, {}, callback);
+}
+
+
+function receiveTypingStatusUpdates(data_callback, userName, partnerUserName) {
+
+    let updateRequest = new UpdateRequest();
+    updateRequest.setRequestsendername(userName)
+    updateRequest.setPartnername(partnerUserName)
+
+
+    const client = new ChatServiceClient(HOST.grpc_api);
+    const call = client.receiveMessageTypingStatusUpdate(updateRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
+    call.on('data', data_callback);
+}
+
+function sendMessageTypingStatusUpdate(callback, typerUsername, recipientName, isTyping) {
+    let messageTypingStatus = new MessageTypingStatus();
+    messageTypingStatus.setTyperusername(typerUsername);
+    messageTypingStatus.setRecipientusername(recipientName);
+    messageTypingStatus.setTyping(isTyping)
+
+    // create gRPC client that will call ou java server
+    const client = new ChatServiceClient(HOST.grpc_api)
+        .sendMessageTypingStatusUpdate(messageTypingStatus, {}, callback);
 }
 
 function sendMessage(callback, message, senderName, recipientName) {
@@ -16,16 +54,16 @@ function sendMessage(callback, message, senderName, recipientName) {
     chatMessage.setTousername(recipientName);
     chatMessage.setMessage(message);
 
-
+    console.log("Sending message: " + chatMessage)
     // create gRPC client that will call ou java server
     const client = new ChatServiceClient(HOST.grpc_api)
-        .sendMessage(chatMessage, {deadline: GRPC_HELPER.getTimelessRequestTimeout()}, callback);
+        .sendMessage(chatMessage, {}, callback);
 }
 
-function receiveMessages(data_callback, end_callback, senderName, recipientName) {
-    let chatmessageRequest = new ChatMessageRequest();
-    chatmessageRequest.setRecipientname(recipientName);
-    chatmessageRequest.setSendername(senderName);
+function receiveMessages(data_callback, end_callback, requestSenderName, partnerName) {
+    let chatmessageRequest = new UpdateRequest();
+    chatmessageRequest.setRequestsendername(requestSenderName);
+    chatmessageRequest.setPartnername(partnerName);
 
     const call = new ChatServiceClient(HOST.grpc_api)
         .receiveMessage(chatmessageRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
@@ -36,5 +74,8 @@ function receiveMessages(data_callback, end_callback, senderName, recipientName)
 export {
     receiveMessageReadingStatusUpdates,
     sendMessage,
-    receiveMessages
+    receiveMessages,
+    sendMessageReadingStatus,
+    sendMessageTypingStatusUpdate,
+    receiveTypingStatusUpdates,
 };

@@ -141,16 +141,16 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessage =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.ChatMessageRequest,
+ *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
  *   !proto.ro.tuc.chat.proto_gen.ChatMessage>}
  */
 const methodDescriptor_ChatService_receiveMessage = new grpc.web.MethodDescriptor(
   '/ro.tuc.chat.proto_gen.ChatService/receiveMessage',
   grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.ChatMessageRequest,
+  proto.ro.tuc.chat.proto_gen.UpdateRequest,
   proto.ro.tuc.chat.proto_gen.ChatMessage,
   /**
-   * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request
+   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -161,7 +161,7 @@ const methodDescriptor_ChatService_receiveMessage = new grpc.web.MethodDescripto
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}
@@ -178,7 +178,7 @@ proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessage =
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.ChatMessageRequest} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}
@@ -436,16 +436,16 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessageReadin
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.Empty,
+ *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
  *   !proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
  */
 const methodDescriptor_ChatService_receiveMessageReadingStatusUpdates = new grpc.web.MethodDescriptor(
   '/ro.tuc.chat.proto_gen.ChatService/receiveMessageReadingStatusUpdates',
   grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.Empty,
+  proto.ro.tuc.chat.proto_gen.UpdateRequest,
   proto.ro.tuc.chat.proto_gen.MessageReadingStatus,
   /**
-   * @param {!proto.ro.tuc.chat.proto_gen.Empty} request
+   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -456,7 +456,7 @@ const methodDescriptor_ChatService_receiveMessageReadingStatusUpdates = new grpc
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
@@ -473,7 +473,7 @@ proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessageReadingSta
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
@@ -553,16 +553,16 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessageTyping
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.Empty,
+ *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
  *   !proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}
  */
 const methodDescriptor_ChatService_receiveMessageTypingStatusUpdate = new grpc.web.MethodDescriptor(
   '/ro.tuc.chat.proto_gen.ChatService/receiveMessageTypingStatusUpdate',
   grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.Empty,
+  proto.ro.tuc.chat.proto_gen.UpdateRequest,
   proto.ro.tuc.chat.proto_gen.MessageTypingStatus,
   /**
-   * @param {!proto.ro.tuc.chat.proto_gen.Empty} request
+   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -573,7 +573,7 @@ const methodDescriptor_ChatService_receiveMessageTypingStatusUpdate = new grpc.w
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}
@@ -590,7 +590,7 @@ proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessageTypingStat
 
 
 /**
- * @param {!proto.ro.tuc.chat.proto_gen.Empty} request The request proto
+ * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}

@@ -11,7 +11,7 @@ function sendOpenSessionRequest(callback, myUserName) {
 
     // create gRPC client that will call ou java server
     const client = new ChatServiceClient(HOST.grpc_api)
-        .sendOpenSessionRequest(openSessionRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()}, callback);
+        .sendOpenSessionRequest(openSessionRequest, {}, callback);
 }
 
 export {

@@ -22,16 +22,24 @@ function CustomChatContainer(props) {
     const [messages, setMessages] = useState([]);
     const [recipientIsTyping, setRecipientIsTyping] = useState(false)
     const [recipientName, setRecipientName] = useState(props.recipientName);
+    const [recipientSawAll, setRecipientSawAll] = useState(false);
     const messagesRef = useRef();
     messagesRef.current = messages;
 
     useEffect(() => {
-        API_CHAT.receiveMessages(on_message_received, props.onSessionEndCallback, recipientName, API_AUTH.getCurrentUserName())
-        API_CHAT.receiveMessageReadingStatusUpdates(on_message_reading_status_update_callback)
+        API_CHAT.receiveMessages(on_message_received, props.onSessionEndCallback, API_AUTH.getCurrentUserName(), recipientName)
+        API_CHAT.receiveMessageReadingStatusUpdates(on_message_reading_status_update_callback, API_AUTH.getCurrentUserName(), recipientName)
+        API_CHAT.receiveTypingStatusUpdates(on_partner_typing_status_update_callback, API_AUTH.getCurrentUserName(), recipientName)
     }, [])
 
     const on_message_reading_status_update_callback = status_update => {
         console.log("Message Reading Update: ", status_update)
+        setRecipientSawAll(true)
+    }
+
+    const on_partner_typing_status_update_callback = status_update => {
+        console.log("Message Typing Update: ", status_update)
+        setRecipientIsTyping(status_update.getTyping())
     }
 
     const on_message_received = message => {
@@ -42,12 +50,22 @@ function CustomChatContainer(props) {
         setMessages(updatedMessages)
     }
 
-    function getTypingInfo() {
-        return recipientName + " is typing";
+    const on_message_typing_status_send = (err, response) => {
+        if (err != null || response.getSuccessful() === false) {
+            console.log("We couldn't notify your partner " + recipientName + " that you are" +
+                " typing.")
+        }
     }
 
-    function onReadMessages() {
+    const on_message_reading_status_send = (err, response) => {
+        if (err != null || response.getSuccessful() === false) {
+            console.log("We couldn't notify your partner " + recipientName + " that you read the" +
+                " messages")
+        }
+    }
 
+    function getTypingInfo() {
+        return recipientName + " is typing";
     }
 
     function onMessageSend(innerHtml, textContent, innerText, nodes) {
@@ -61,6 +79,7 @@ function CustomChatContainer(props) {
                     let updatedMessages = messagesRef.current.map(m => m)
                     updatedMessages.push(response.getSentmessage())
                     setMessages(updatedMessages)
+                    setRecipientSawAll(false)
                 } else {
                     window.alert("Your message couldn't be delivered: " + response.getStatus().getErrormessage())
                 }
@@ -93,16 +112,33 @@ function CustomChatContainer(props) {
         return messages.map(messageProto => messageToMessageComponent(messageProto, nr++))
     }
 
-    return <div style={{ position: "relative", height: "500px" }} onClick={() => console.log("Chat Focus In")}>
+    function onStartTyping() {
+        API_CHAT.sendMessageTypingStatusUpdate(on_message_typing_status_send, API_AUTH.getCurrentUserName(), recipientName, true)
+    }
+
+    function onEndTyping() {
+        API_CHAT.sendMessageTypingStatusUpdate(on_message_typing_status_send, API_AUTH.getCurrentUserName(), recipientName, false)
+    }
+
+    function onSeeMessages() {
+        API_CHAT.sendMessageReadingStatus(on_message_reading_status_send, API_AUTH.getCurrentUserName(), recipientName)
+    }
+
+    function getInfo() {
+        if (recipientSawAll) return "Seen"
+        else return "Unseen"
+    }
+
+    return <div style={{ position: "relative", height: "500px" }} onClick={() => onSeeMessages()}>
         <MainContainer>
             <ChatContainer>
                 <ConversationHeader>
-                    <ConversationHeader.Content userName={recipientName} />
+                    <ConversationHeader.Content userName={recipientName} info={getInfo()}/>
                 </ConversationHeader>
-                <MessageList typingIndicator={<TypingIndicator content={getTypingInfo()}/>}>
+                <MessageList typingIndicator={recipientIsTyping && <TypingIndicator content={getTypingInfo()}/>}>
                     {getMessagesList()}
                 </MessageList>
-                <MessageInput placeholder="Type message here" attachButton={false} onFocus={() => console.log("Focus In")} onBlur={() => console.log("focus out")} onSend={onMessageSend}/>
+                <MessageInput placeholder="Type message here" attachButton={false} onFocus={() =>onStartTyping()} onBlur={() => onEndTyping()} onSend={onMessageSend}/>
             </ChatContainer>
         </MainContainer>
     </div>
