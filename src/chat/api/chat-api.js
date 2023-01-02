@@ -3,11 +3,10 @@ import * as GRPC_HELPER from "../../commons/grpc"
 import {ChatMessage, ChatMessageRequest, UpdateRequest, MessageTypingStatus, MessageReadingStatus} from "../../chat-proto-gen/chat_pb";
 import {ChatServiceClient} from "../../chat-proto-gen/chat_grpc_web_pb";
 
-function receiveMessageReadingStatusUpdates(data_callback, userName, partnerUserName) {
+function receiveMessageReadingStatusUpdates(data_callback, userName) {
 
     let updateRequest = new UpdateRequest();
     updateRequest.setRequestsendername(userName)
-    updateRequest.setPartnername(partnerUserName)
 
     const client = new ChatServiceClient(HOST.grpc_api);
     const call = client.receiveMessageReadingStatusUpdates(updateRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
@@ -25,12 +24,10 @@ function sendMessageReadingStatus(callback, readerUserName, recipientName) {
 }
 
 
-function receiveTypingStatusUpdates(data_callback, userName, partnerUserName) {
+function receiveTypingStatusUpdates(data_callback, userName) {
 
     let updateRequest = new UpdateRequest();
     updateRequest.setRequestsendername(userName)
-    updateRequest.setPartnername(partnerUserName)
-
 
     const client = new ChatServiceClient(HOST.grpc_api);
     const call = client.receiveMessageTypingStatusUpdate(updateRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
@@ -60,15 +57,13 @@ function sendMessage(callback, message, senderName, recipientName) {
         .sendMessage(chatMessage, {}, callback);
 }
 
-function receiveMessages(data_callback, end_callback, requestSenderName, partnerName) {
+function receiveMessages(data_callback, requestSenderName) {
     let chatmessageRequest = new UpdateRequest();
-    chatmessageRequest.setRequestsendername(requestSenderName);
-    chatmessageRequest.setPartnername(partnerName);
+    chatmessageRequest.setRequestsendername(requestSenderName)
 
     const call = new ChatServiceClient(HOST.grpc_api)
         .receiveMessage(chatmessageRequest, {deadline: GRPC_HELPER.getTimelessRequestTimeout()});
     call.on('data', data_callback);
-    call.on('end', end_callback);
 }
 
 export {

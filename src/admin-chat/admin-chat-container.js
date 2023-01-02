@@ -5,6 +5,7 @@ import * as API_NOTIFICATIONS from "../commons/sockets/socket-utils"
 import * as API_AUTH from "../commons/authentication/auth-api";
 import {useHistory} from "react-router-dom";
 import * as API_ADMIN_CHAT from "./api/admin-chat-api";
+import * as API_CHAT from "./../chat/api/chat-api"
 import CustomChatContainer from "../chat/chat-container";
 
 function AdminChatContainer() {
@@ -13,34 +14,61 @@ function AdminChatContainer() {
     const [incomingRequestsFromClients, setIncomingRequestsFromClients] = useState([]);
     const incomingRequestsFromClientsRef = useRef();
     incomingRequestsFromClientsRef.current = incomingRequestsFromClients;
-    const [openSessionClientNames, setOpenSessionClientNames] = useState([]);
-    const openSessionClientNamesRef = useRef();
-    openSessionClientNamesRef.current = openSessionClientNames;
-    const [openSessionChatContainers, setOpenSessionChatContainers] = useState([]);
-    const openSessionChatContainersRef = useRef();
-    openSessionChatContainersRef.current = openSessionChatContainers;
-    const [nextChatId, setNextChatId] = useState(0);
+    const [openSessionsData, setOpenSessionsData] = useState({});
+    const openSessionsDataRef = useRef();
+    openSessionsDataRef.current = openSessionsData;
+    // const [openSessionChatContainers, setOpenSessionChatContainers] = useState([]);
+    // const openSessionChatContainersRef = useRef();
+    // openSessionChatContainersRef.current = openSessionChatContainers;
+    // const [nextChatId, setNextChatId] = useState(0);
 
     useEffect(() => {
         API_NOTIFICATIONS.setupRoleSpecificNotifications();
         API_AUTH.guaranteeUserHasRole('ADMIN', history);
-        onReceiveOpenChatSessionRequests()
+        API_ADMIN_CHAT.receiveOpenSessionRequests(onOpenChatSessionRequestCallback)
+        API_CHAT.receiveMessages(onMessageReceived, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveMessageReadingStatusUpdates(onMessageReadingStatusUpdateCallback, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveTypingStatusUpdates(onPartnerTypingStatusUpdateCallback, API_AUTH.getCurrentUserName())
     }, [])
 
-    function onReceiveOpenChatSessionRequests() {
-        const callback = (openSessionReqeust) => {
-            console.log({openSessionReqeust});
-            let updatedIncomingRequests = incomingRequestsFromClientsRef.current.map(r => r)
-            console.log("Array: ", updatedIncomingRequests)
-            updatedIncomingRequests.push(openSessionReqeust)
-            setIncomingRequestsFromClients(updatedIncomingRequests)
-        };
-
-        API_ADMIN_CHAT.receiveOpenSessionRequests(callback)
+    const onOpenChatSessionRequestCallback = (openSessionRequest) => {
+        console.log({openSessionRequest});
+        let updatedIncomingRequests = incomingRequestsFromClientsRef.current.map(r => r)
+        updatedIncomingRequests.push(openSessionRequest)
+        setIncomingRequestsFromClients(updatedIncomingRequests)
     }
 
-    function recipientNameToOpenSessionChatContainer(name, key) {
-        return <CustomChatContainer key={key} recipientName={name} onSessionEndCallback={() => onSessionEnd(name)}/>
+    const onMessageReadingStatusUpdateCallback = status_update => {
+        console.log("Message Reading Update: ", status_update)
+
+        let updatedOpenSessionsData = {...openSessionsDataRef.current};
+        updatedOpenSessionsData[status_update.getReaderusername()].recipientSawAll = true;
+        setOpenSessionsData(updatedOpenSessionsData)
+
+        console.log("Updated open sessions data:")
+        console.log(openSessionsData)
+    }
+
+    const onPartnerTypingStatusUpdateCallback = status_update => {
+        console.log("Message Typing Update: ", status_update)
+
+        let updatedOpenSessionsData = {...openSessionsDataRef.current};
+        updatedOpenSessionsData[status_update.getTyperusername()].recipientIsTyping = status_update.getTyping();
+        setOpenSessionsData(updatedOpenSessionsData)
+
+        console.log("Updated open sessions data:")
+        console.log(openSessionsData)
+    }
+
+    const onMessageReceived = message => {
+        console.log("Message Received: ", message)
+
+        let updatedOpenSessionsData = {...openSessionsDataRef.current};
+        updatedOpenSessionsData[message.getFromusername()].messages.push(message)
+        setOpenSessionsData(updatedOpenSessionsData)
+
+        console.log("Updated open sessions data:")
+        console.log(openSessionsData)
     }
 
     function onAcceptOpenChatSessionRequest(openSessionRequest) {
@@ -53,15 +81,16 @@ function AdminChatContainer() {
                 setIncomingRequestsFromClients(updatedIncomingRequests)
 
                 if (response.getSuccessful()) {
-                    let updatedOpenSessions = openSessionClientNamesRef.current.map(c => c)
-                    updatedOpenSessions.push(openSessionRequest.getFromusername())
-                    setOpenSessionClientNames(updatedOpenSessions)
+                    let updatedOpenSessions = {...openSessionsDataRef.current}
+                    updatedOpenSessions[openSessionRequest.getFromusername()] = {
+                        messages: [],
+                        recipientIsTyping: false,
+                        recipientSawAll: true
+                    }
+                    setOpenSessionsData(updatedOpenSessions)
+                    console.log("Updated open sessions data after accepting request")
+                    console.log(openSessionsData)
 
-                    let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
-                    updatedOpenSessionChatContainers.push(recipientNameToOpenSessionChatContainer(openSessionRequest.getFromusername(), nextChatId))
-                    setOpenSessionChatContainers(updatedOpenSessionChatContainers)
-
-                    setNextChatId(nextChatId+1);
                 } else {
                     window.alert("The session with client " + openSessionRequest.getFromusername() + " couldn't be established: " + response.getErrormessage())
                 }
@@ -82,7 +111,6 @@ function AdminChatContainer() {
 
     function getOpenSessionRequestsList() {
         let nr = 0;
-        console.log(incomingRequestsFromClients)
         return incomingRequestsFromClients.map(fromUserName => openSessionRequestToListGroupItem(fromUserName, nr++))
     }
 
@@ -90,21 +118,49 @@ function AdminChatContainer() {
         console.log("Session End with client: " + clientName)
         window.alert("The client " + clientName + " has left the session. Thus, the session is" +
             " closed.")
-        const index = openSessionClientNamesRef.current.indexOf(clientName)
-        let updatedOpenSessionClientNames = openSessionClientNamesRef.current.map(c => c);
-        updatedOpenSessionClientNames.splice(index, 1)
-        setOpenSessionClientNames(updatedOpenSessionClientNames);
+        // const index = openSessionClientNamesRef.current.indexOf(clientName)
+        // let updatedOpenSessionClientNames = openSessionClientNamesRef.current.map(c => c);
+        // updatedOpenSessionClientNames.splice(index, 1)
+        // setOpenSessionClientNames(updatedOpenSessionClientNames);
+        //
+        // let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
+        // updatedOpenSessionChatContainers.splice(index, 1)
+        // setOpenSessionChatContainers(updatedOpenSessionChatContainers)
+        // console.log("Removing chat container at index: " + index)
+    }
 
-        let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
-        updatedOpenSessionChatContainers.splice(index, 1)
-        setOpenSessionChatContainers(updatedOpenSessionChatContainers)
-        console.log("Removing chat container at index: " + index)
+    const onMessageSentCallback = sentMessage => {
+        let updatedOpenSessionsData = {...openSessionsDataRef.current};
+        updatedOpenSessionsData[sentMessage.getTousername()].messages.push(sentMessage)
+        updatedOpenSessionsData[sentMessage.getTousername()].recipientSawAll = false;
+        setOpenSessionsData(updatedOpenSessionsData)
+
+        console.log("Updated open sessions data:")
+        console.log(openSessionsData)
+    }
+
+    function recipientNameToOpenSessionChatContainer(name, key) {
+        return <CustomChatContainer
+            key={key}
+            recipientName={name}
+            onSessionEndCallback={() => onSessionEnd(name)}
+            messages={openSessionsData[name].messages}
+            recipientIsTyping={openSessionsData[name].recipientIsTyping}
+            recipientSawAll={openSessionsData[name].recipientSawAll}
+            onMessageSentCallback={onMessageSentCallback}
+        />
     }
 
     function getOpenSessionChatContainers() {
+        let containers = [];
         let key = 0;
-        console.log("Open Sessions: " + openSessionClientNames)
-        return openSessionClientNames.map(clientName => <CustomChatContainer key={key++} recipientName={clientName} onSessionEndCallback={() => onSessionEnd(clientName)}/>)
+        for (const recipientName in openSessionsData) {
+            console.log("Added Chat container for " + recipientName)
+            containers.push(recipientNameToOpenSessionChatContainer(recipientName, key++))
+        }
+        console.log("Containers: ")
+        console.log(containers)
+        return containers;
     }
 
     return (
@@ -137,7 +193,7 @@ function AdminChatContainer() {
                             gridTemplateColumns: '49% 49%',
                             margin: '20 auto'
                         }}>
-                            {openSessionChatContainers}
+                            {getOpenSessionChatContainers()}
                         </div>
                     </Col>
                 </Row>

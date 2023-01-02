@@ -466,8 +466,7 @@ proto.ro.tuc.chat.proto_gen.UpdateRequest.prototype.toObject = function(opt_incl
  */
 proto.ro.tuc.chat.proto_gen.UpdateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    requestsendername: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    partnername: jspb.Message.getFieldWithDefault(msg, 2, "")
+    requestsendername: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -508,10 +507,6 @@ proto.ro.tuc.chat.proto_gen.UpdateRequest.deserializeBinaryFromReader = function
       var value = /** @type {string} */ (reader.readString());
       msg.setRequestsendername(value);
       break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setPartnername(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -548,13 +543,6 @@ proto.ro.tuc.chat.proto_gen.UpdateRequest.serializeBinaryToWriter = function(mes
       f
     );
   }
-  f = message.getPartnername();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
 };
 
 
@@ -573,24 +561,6 @@ proto.ro.tuc.chat.proto_gen.UpdateRequest.prototype.getRequestsendername = funct
  */
 proto.ro.tuc.chat.proto_gen.UpdateRequest.prototype.setRequestsendername = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional string partnerName = 2;
- * @return {string}
- */
-proto.ro.tuc.chat.proto_gen.UpdateRequest.prototype.getPartnername = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.ro.tuc.chat.proto_gen.UpdateRequest} returns this
- */
-proto.ro.tuc.chat.proto_gen.UpdateRequest.prototype.setPartnername = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {Card, CardHeader, Col, Row, Button } from 'reactstrap';
 import { Dots } from 'loading-animations-react';
 
@@ -8,6 +8,7 @@ import {useHistory} from "react-router-dom";
 import * as API_CLIENT_CHAT from "./api/client-chat-api"
 import APIResponseErrorMessage from "../commons/errorhandling/api-response-error-message";
 import CustomChatContainer from "../chat/chat-container";
+import * as API_CHAT from "../chat/api/chat-api";
 
 function ClientChatContainer() {
 
@@ -16,12 +17,36 @@ function ClientChatContainer() {
     const [sessionIsOpen, setSessionIsOpen] = useState(false);
     const [error, setError] = useState({ status: 0, errorMessage: null });
     const [messages, setMessages] = useState([]);
-    const [recipientIsTyping, setRecipientIsTyping] = useState(false)
+    const [adminIsTyping, setAdminIsTyping] = useState(false)
+    const [adminSawAll, setAdminSawAll] = useState(false);
+    const messagesRef = useRef();
+    messagesRef.current = messages;
 
     useEffect(() => {
         // API_NOTIFICATIONS.setupRoleSpecificNotifications();
         API_AUTH.guaranteeUserHasRole('CLIENT', history);
+        API_CHAT.receiveMessages(onMessageReceivedCallback, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveMessageReadingStatusUpdates(onMessageReadingStatusUpdateCallback, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveTypingStatusUpdates(onPartnerTypingStatusUpdateCallback, API_AUTH.getCurrentUserName())
     }, [])
+
+    const onMessageReadingStatusUpdateCallback = status_update => {
+        console.log("Message Reading Update: ", status_update)
+        setAdminSawAll(true)
+    }
+
+    const onPartnerTypingStatusUpdateCallback = status_update => {
+        console.log("Message Typing Update: ", status_update)
+        setAdminIsTyping(status_update.getTyping())
+    }
+
+    const onMessageReceivedCallback = message => {
+        console.log("Message Received: ", message)
+
+        let updatedMessages = messagesRef.current.map(m => m)
+        updatedMessages.push(message)
+        setMessages(updatedMessages)
+    }
 
     function onSendOpenSessionRequest() {
         const callback = (err, response) => {
@@ -51,6 +76,13 @@ function ClientChatContainer() {
         setSessionIsOpen(false);
     }
 
+    const onMessageSentCallback = sentMessage => {
+        let updatedMessages = messagesRef.current.map(m => m)
+        updatedMessages.push(sentMessage)
+        setMessages(updatedMessages)
+        setAdminSawAll(false)
+    }
+
     return (
         <div>
             <CardHeader>
@@ -75,7 +107,14 @@ function ClientChatContainer() {
                             <Fragment>
                                 <h1>Chat Session</h1>
 
-                                <CustomChatContainer recipientName="admin" onSessionEndCallback={() => onSessionEnd()}/>
+                                <CustomChatContainer
+                                    recipientName="admin"
+                                    onSessionEndCallback={() => onSessionEnd()}
+                                    messages={messages}
+                                    recipientIsTyping={adminIsTyping}
+                                    recipientSawAll={adminSawAll}
+                                    onMessageSentCallback={onMessageSentCallback}
+                                />
                             </Fragment>
                         }
 
