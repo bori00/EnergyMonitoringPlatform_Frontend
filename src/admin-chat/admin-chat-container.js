@@ -26,10 +26,20 @@ function AdminChatContainer() {
         API_NOTIFICATIONS.setupRoleSpecificNotifications();
         API_AUTH.guaranteeUserHasRole('ADMIN', history);
         API_ADMIN_CHAT.receiveOpenSessionRequests(onOpenChatSessionRequestCallback)
-        API_CHAT.receiveMessages(onMessageReceived, API_AUTH.getCurrentUserName())
-        API_CHAT.receiveMessageReadingStatusUpdates(onMessageReadingStatusUpdateCallback, API_AUTH.getCurrentUserName())
-        API_CHAT.receiveTypingStatusUpdates(onPartnerTypingStatusUpdateCallback, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveChatUpdates(onChatUpdateCallback, API_AUTH.getCurrentUserName())
     }, [])
+
+    const onChatUpdateCallback = (chatUpdate) => {
+        if (chatUpdate.hasMessage()) {
+            onMessageReceived(chatUpdate.getMessage())
+        } else if (chatUpdate.hasReadingstatus()) {
+            onMessageReadingStatusUpdateCallback(chatUpdate.getReadingstatus())
+        } else if (chatUpdate.hasTypingstatus()) {
+            onPartnerTypingStatusUpdateCallback(chatUpdate.getTypingstatus())
+        } else if (chatUpdate.hasSessionclosedupdate()) {
+            onSessionEnd(chatUpdate.getSessionclosedupdate().getPartnername())
+        }
+    }
 
     const onOpenChatSessionRequestCallback = (openSessionRequest) => {
         console.log({openSessionRequest});
@@ -118,15 +128,12 @@ function AdminChatContainer() {
         console.log("Session End with client: " + clientName)
         window.alert("The client " + clientName + " has left the session. Thus, the session is" +
             " closed.")
-        // const index = openSessionClientNamesRef.current.indexOf(clientName)
-        // let updatedOpenSessionClientNames = openSessionClientNamesRef.current.map(c => c);
-        // updatedOpenSessionClientNames.splice(index, 1)
-        // setOpenSessionClientNames(updatedOpenSessionClientNames);
-        //
-        // let updatedOpenSessionChatContainers = openSessionChatContainersRef.current.map(c => c);
-        // updatedOpenSessionChatContainers.splice(index, 1)
-        // setOpenSessionChatContainers(updatedOpenSessionChatContainers)
-        // console.log("Removing chat container at index: " + index)
+
+        let updatedOpenSessions = {...openSessionsDataRef.current}
+        delete updatedOpenSessions[clientName];
+        setOpenSessionsData(updatedOpenSessions)
+        console.log("Updated open sessions data after accepting request")
+        console.log(openSessionsData)
     }
 
     const onMessageSentCallback = sentMessage => {
@@ -143,7 +150,6 @@ function AdminChatContainer() {
         return <CustomChatContainer
             key={key}
             recipientName={name}
-            onSessionEndCallback={() => onSessionEnd(name)}
             messages={openSessionsData[name].messages}
             recipientIsTyping={openSessionsData[name].recipientIsTyping}
             recipientSawAll={openSessionsData[name].recipientSawAll}
@@ -169,35 +175,38 @@ function AdminChatContainer() {
                 <strong>Client Assistance</strong>
             </CardHeader>
 
-            <Card>
-                <br />
-                <Row>
-                    <Col sm={{ size: '8', offset: 1 }}>
-                        <h3>Assistance Requests from Clients</h3>
-                        <ListGroup variant="flush">
-                            {getOpenSessionRequestsList()}
-                        </ListGroup>
-                    </Col>
-                </Row>
+            {
+                API_AUTH.getCurrentUserName() === "admin" &&
+                <Card>
+                    <br/>
+                    <Row>
+                        <Col sm={{size: '8', offset: 1}}>
+                            <h3>Assistance Requests from Clients</h3>
+                            <ListGroup variant="flush">
+                                {getOpenSessionRequestsList()}
+                            </ListGroup>
+                        </Col>
+                    </Row>
 
-                <hr/>
+                    <hr/>
 
-                <Row>
-                    <Col sm={{size: '8', offset: 1}}>
-                        <h3>Open Assistance Sessions</h3>
+                    <Row>
+                        <Col sm={{size: '8', offset: 1}}>
+                            <h3>Open Assistance Sessions</h3>
 
-                        <div style={{
-                            display: "grid",
-                            gap: 30,
-                            maxWidth: 800,
-                            gridTemplateColumns: '49% 49%',
-                            margin: '20 auto'
-                        }}>
-                            {getOpenSessionChatContainers()}
-                        </div>
-                    </Col>
-                </Row>
-            </Card>
+                            <div style={{
+                                display: "grid",
+                                gap: 30,
+                                maxWidth: 800,
+                                gridTemplateColumns: '49% 49%',
+                                margin: '20 auto'
+                            }}>
+                                {getOpenSessionChatContainers()}
+                            </div>
+                        </Col>
+                    </Row>
+                </Card>
+            }
 
         </div>
     );

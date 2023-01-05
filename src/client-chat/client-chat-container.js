@@ -21,14 +21,26 @@ function ClientChatContainer() {
     const [adminSawAll, setAdminSawAll] = useState(false);
     const messagesRef = useRef();
     messagesRef.current = messages;
+    const sessionIsOpenRef = useRef()
+    sessionIsOpenRef.current = sessionIsOpen;
 
     useEffect(() => {
         // API_NOTIFICATIONS.setupRoleSpecificNotifications();
         API_AUTH.guaranteeUserHasRole('CLIENT', history);
-        API_CHAT.receiveMessages(onMessageReceivedCallback, API_AUTH.getCurrentUserName())
-        API_CHAT.receiveMessageReadingStatusUpdates(onMessageReadingStatusUpdateCallback, API_AUTH.getCurrentUserName())
-        API_CHAT.receiveTypingStatusUpdates(onPartnerTypingStatusUpdateCallback, API_AUTH.getCurrentUserName())
+        API_CHAT.receiveChatUpdates(onChatUpdateCallback, API_AUTH.getCurrentUserName())
     }, [])
+
+    const onChatUpdateCallback = (chatUpdate) => {
+        if (chatUpdate.hasMessage()) {
+            onMessageReceivedCallback(chatUpdate.getMessage())
+        } else if (chatUpdate.hasReadingstatus()) {
+            onMessageReadingStatusUpdateCallback(chatUpdate.getReadingstatus())
+        } else if (chatUpdate.hasTypingstatus()) {
+            onPartnerTypingStatusUpdateCallback(chatUpdate.getTypingstatus())
+        } else if (chatUpdate.hasSessionclosedupdate()) {
+            onSessionEnd()
+        }
+    }
 
     const onMessageReadingStatusUpdateCallback = status_update => {
         console.log("Message Reading Update: ", status_update)
@@ -56,6 +68,9 @@ function ClientChatContainer() {
                     " Please try again later!")
             } else {
                 if (response.getAccepted()) {
+                    setMessages([])
+                    setAdminSawAll(true)
+                    setAdminIsTyping(false)
                     setSessionIsOpen(true);
                 } else {
                     window.alert("Your request for assistance was rejected by the admin. We're" +
@@ -70,16 +85,20 @@ function ClientChatContainer() {
     }
 
     function onSessionEnd() {
-        console.log("Session End with admin")
-        window.alert("The admin has left the session. Thus, the session is closed.")
-        setSentOpenSessionRequest(false);
-        setSessionIsOpen(false);
+        console.log("ADMIN left")
+        if (sessionIsOpenRef.current === true) {
+            console.log("Session End with admin")
+            window.alert("The admin has left the session. Thus, the session is closed.")
+            setSentOpenSessionRequest(false);
+            setSessionIsOpen(false);
+        }
     }
 
     const onMessageSentCallback = sentMessage => {
         let updatedMessages = messagesRef.current.map(m => m)
         updatedMessages.push(sentMessage)
         setMessages(updatedMessages)
+        setAdminIsTyping(false)
         setAdminSawAll(false)
     }
 
@@ -90,11 +109,13 @@ function ClientChatContainer() {
             </CardHeader>
 
             <Card>
-                <br />
+                <br/>
                 <Row>
-                    <Col sm={{ size: '8', offset: 1 }}>
-                        {   sentOpenSessionRequest === false &&
-                            <Button onClick={() => {onSendOpenSessionRequest()}}>Contact an Admin</Button>
+                    <Col sm={{size: '8', offset: 1}}>
+                        {sentOpenSessionRequest === false &&
+                        <Button onClick={() => {
+                            onSendOpenSessionRequest()
+                        }}>Contact an Admin</Button>
                         }
 
                         {
@@ -109,7 +130,6 @@ function ClientChatContainer() {
 
                                 <CustomChatContainer
                                     recipientName="admin"
-                                    onSessionEndCallback={() => onSessionEnd()}
                                     messages={messages}
                                     recipientIsTyping={adminIsTyping}
                                     recipientSawAll={adminSawAll}
@@ -120,7 +140,8 @@ function ClientChatContainer() {
 
                         {
                             error.status > 0 &&
-                            <APIResponseErrorMessage errorStatus={error.status} error={error.errorMessage} />
+                            <APIResponseErrorMessage errorStatus={error.status}
+                                                     error={error.errorMessage}/>
                         }
                     </Col>
                 </Row>

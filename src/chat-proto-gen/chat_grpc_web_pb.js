@@ -80,123 +80,6 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.ChatMessage,
- *   !proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
- */
-const methodDescriptor_ChatService_sendMessage = new grpc.web.MethodDescriptor(
-  '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
-  grpc.web.MethodType.UNARY,
-  proto.ro.tuc.chat.proto_gen.ChatMessage,
-  proto.ro.tuc.chat.proto_gen.SendMessageStatus,
-  /**
-   * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.ro.tuc.chat.proto_gen.SendMessageStatus.deserializeBinary
-);
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
- *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.ro.tuc.chat.proto_gen.SendMessageStatus)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>|undefined}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.sendMessage =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_sendMessage,
-      callback);
-};
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request The
- *     request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!Promise<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
- *     Promise that resolves to the response
- */
-proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessage =
-    function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_sendMessage);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
- *   !proto.ro.tuc.chat.proto_gen.ChatMessage>}
- */
-const methodDescriptor_ChatService_receiveMessage = new grpc.web.MethodDescriptor(
-  '/ro.tuc.chat.proto_gen.ChatService/receiveMessage',
-  grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.UpdateRequest,
-  proto.ro.tuc.chat.proto_gen.ChatMessage,
-  /**
-   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.ro.tuc.chat.proto_gen.ChatMessage.deserializeBinary
-);
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessage =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessage',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessage);
-};
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatMessage>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.receiveMessage =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessage',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessage);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.MethodDescriptor<
  *   !proto.ro.tuc.chat.proto_gen.OpenSessionRequest,
  *   !proto.ro.tuc.chat.proto_gen.OpenSessionRequestResponse>}
  */
@@ -375,6 +258,123 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.acceptOpenSession
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.ro.tuc.chat.proto_gen.ChatUpdateRequest,
+ *   !proto.ro.tuc.chat.proto_gen.ChatUpdate>}
+ */
+const methodDescriptor_ChatService_receiveChatUpdates = new grpc.web.MethodDescriptor(
+  '/ro.tuc.chat.proto_gen.ChatService/receiveChatUpdates',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.ro.tuc.chat.proto_gen.ChatUpdateRequest,
+  proto.ro.tuc.chat.proto_gen.ChatUpdate,
+  /**
+   * @param {!proto.ro.tuc.chat.proto_gen.ChatUpdateRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ro.tuc.chat.proto_gen.ChatUpdate.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatUpdateRequest} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatUpdate>}
+ *     The XHR Node Readable Stream
+ */
+proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveChatUpdates =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/ro.tuc.chat.proto_gen.ChatService/receiveChatUpdates',
+      request,
+      metadata || {},
+      methodDescriptor_ChatService_receiveChatUpdates);
+};
+
+
+/**
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatUpdateRequest} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.ChatUpdate>}
+ *     The XHR Node Readable Stream
+ */
+proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.receiveChatUpdates =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/ro.tuc.chat.proto_gen.ChatService/receiveChatUpdates',
+      request,
+      metadata || {},
+      methodDescriptor_ChatService_receiveChatUpdates);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.ro.tuc.chat.proto_gen.ChatMessage,
+ *   !proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
+ */
+const methodDescriptor_ChatService_sendMessage = new grpc.web.MethodDescriptor(
+  '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
+  grpc.web.MethodType.UNARY,
+  proto.ro.tuc.chat.proto_gen.ChatMessage,
+  proto.ro.tuc.chat.proto_gen.SendMessageStatus,
+  /**
+   * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ro.tuc.chat.proto_gen.SendMessageStatus.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.ro.tuc.chat.proto_gen.SendMessageStatus)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.sendMessage =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
+      request,
+      metadata || {},
+      methodDescriptor_ChatService_sendMessage,
+      callback);
+};
+
+
+/**
+ * @param {!proto.ro.tuc.chat.proto_gen.ChatMessage} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.ro.tuc.chat.proto_gen.SendMessageStatus>}
+ *     Promise that resolves to the response
+ */
+proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessage =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/ro.tuc.chat.proto_gen.ChatService/sendMessage',
+      request,
+      metadata || {},
+      methodDescriptor_ChatService_sendMessage);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.ro.tuc.chat.proto_gen.MessageReadingStatus,
  *   !proto.ro.tuc.chat.proto_gen.Status>}
  */
@@ -436,62 +436,6 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessageReadin
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
- *   !proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
- */
-const methodDescriptor_ChatService_receiveMessageReadingStatusUpdates = new grpc.web.MethodDescriptor(
-  '/ro.tuc.chat.proto_gen.ChatService/receiveMessageReadingStatusUpdates',
-  grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.UpdateRequest,
-  proto.ro.tuc.chat.proto_gen.MessageReadingStatus,
-  /**
-   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.ro.tuc.chat.proto_gen.MessageReadingStatus.deserializeBinary
-);
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessageReadingStatusUpdates =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessageReadingStatusUpdates',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessageReadingStatusUpdates);
-};
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageReadingStatus>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.receiveMessageReadingStatusUpdates =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessageReadingStatusUpdates',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessageReadingStatusUpdates);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.MethodDescriptor<
  *   !proto.ro.tuc.chat.proto_gen.MessageTypingStatus,
  *   !proto.ro.tuc.chat.proto_gen.Status>}
  */
@@ -547,62 +491,6 @@ proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.sendMessageTyping
       request,
       metadata || {},
       methodDescriptor_ChatService_sendMessageTypingStatusUpdate);
-};
-
-
-/**
- * @const
- * @type {!grpc.web.MethodDescriptor<
- *   !proto.ro.tuc.chat.proto_gen.UpdateRequest,
- *   !proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}
- */
-const methodDescriptor_ChatService_receiveMessageTypingStatusUpdate = new grpc.web.MethodDescriptor(
-  '/ro.tuc.chat.proto_gen.ChatService/receiveMessageTypingStatusUpdate',
-  grpc.web.MethodType.SERVER_STREAMING,
-  proto.ro.tuc.chat.proto_gen.UpdateRequest,
-  proto.ro.tuc.chat.proto_gen.MessageTypingStatus,
-  /**
-   * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.ro.tuc.chat.proto_gen.MessageTypingStatus.deserializeBinary
-);
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServiceClient.prototype.receiveMessageTypingStatusUpdate =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessageTypingStatusUpdate',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessageTypingStatusUpdate);
-};
-
-
-/**
- * @param {!proto.ro.tuc.chat.proto_gen.UpdateRequest} request The request proto
- * @param {?Object<string, string>=} metadata User defined
- *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.ro.tuc.chat.proto_gen.MessageTypingStatus>}
- *     The XHR Node Readable Stream
- */
-proto.ro.tuc.chat.proto_gen.ChatServicePromiseClient.prototype.receiveMessageTypingStatusUpdate =
-    function(request, metadata) {
-  return this.client_.serverStreaming(this.hostname_ +
-      '/ro.tuc.chat.proto_gen.ChatService/receiveMessageTypingStatusUpdate',
-      request,
-      metadata || {},
-      methodDescriptor_ChatService_receiveMessageTypingStatusUpdate);
 };
 
 
