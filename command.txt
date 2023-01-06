@@ -1,0 +1,12 @@
+(powershell)
+choco install mkcert
+mkcert -install
+
+(react root folder)
+mkdir -p .cert
+mkcert -key-file ./.cert/key.pem -cert-file ./.cert/cert.pem "localhost"
+copied the cert files contents into node_modules/webpack-dev-server/ssl/server.pem
+
+for the server
+mkcert -pkcs12 localhost
+copied localhost.p12 into the resources folder

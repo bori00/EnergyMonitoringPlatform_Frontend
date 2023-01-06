@@ -7,6 +7,11 @@ services:
     container_name: energy-utility-frontend-container
     ports:
        - "80:80"
+       - "443:443"
+#    volumes:
+#       - './devcerts:/etc/nginx/volume_certs'
+#    extra_hosts:
+#      - "local.example:127.0.0.1"
 
   envoy:
     image: envoyproxy/envoy-dev:b145180d17cac80aa5f9a7801429d52017fea6d1
