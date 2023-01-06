@@ -38,6 +38,73 @@ static_resources:
                   - name: envoy.filters.http.grpc_web
                   - name: envoy.filters.http.cors
                   - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              # https://www.envoyproxy.io/docs/envoy/v1.15.0/api-v3/extensions/transport_sockets/tls/v3/tls.proto#extensions-transport-sockets-tls-v3-downstreamtlscontext
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              common_tls_context:
+                tls_certificates:
+                  - certificate_chain:
+                      inline_string: |
+                        -----BEGIN CERTIFICATE-----
+                        MIIEMzCCApugAwIBAgIQFrxjfXjH4+b9GHE6VGym/DANBgkqhkiG9w0BAQsFADB5
+                        MR4wHAYDVQQKExVta2NlcnQgZGV2ZWxvcG1lbnQgQ0ExJzAlBgNVBAsMHkRFU0tU
+                        T1AtQk9SSVxCb3JpQERFU0tUT1AtQk9SSTEuMCwGA1UEAwwlbWtjZXJ0IERFU0tU
+                        T1AtQk9SSVxCb3JpQERFU0tUT1AtQk9SSTAeFw0yMzAxMDUyMzI4MTdaFw0yNTA0
+                        MDUyMjI4MTdaMFIxJzAlBgNVBAoTHm1rY2VydCBkZXZlbG9wbWVudCBjZXJ0aWZp
+                        Y2F0ZTEnMCUGA1UECwweREVTS1RPUC1CT1JJXEJvcmlAREVTS1RPUC1CT1JJMIIB
+                        IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsmskzUmzok2faA27YoCmwNnJ
+                        g8p0O3ijuPWq7FYLQ5FMpb6jo57Bi0jSLxM+2/lFtETnIlv1GopeSOSvCcIGRysC
+                        9AOw2SiBoVwRXPQFB7y6yUgooCMbiutOSufQTbx7xyBH+mX2mqMObXvobHLG+FxO
+                        82hsiYUEW0YZv1qGFalxmTW010wlgxQEIhxEqlnp+6XG+fEoHvdpONw2KAR1fJoY
+                        znCCV9zsfXByQasWLxj/v2Lg0a2pikKRvvGk1jlPpDrH4FxVoHtqKSo0LadbkmES
+                        UmvO3GPxSFeN7A8NdavpZaiy55esXvTT2UY4XSUj93nOst0d4J3cuK5zDDvgcQID
+                        AQABo14wXDAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwHwYD
+                        VR0jBBgwFoAU/2pAoVKfvIogidyEFEClEP8fZKUwFAYDVR0RBA0wC4IJbG9jYWxo
+                        b3N0MA0GCSqGSIb3DQEBCwUAA4IBgQBlw09p+QB99hz52XIxEF+ThqjDmD9HsOgj
+                        KnXMmVdLgfz6bG8Uxrt8blJnU4sZAlLTCr84WZbJsDIdML+iiRxTrS6MlVQ1/ud9
+                        GocN3yld9qYvSVYs+aMtmyW8AxlS4wQ2U/rbEZkLia7HiZ0GFgBGUEjSSd7FP1Ij
+                        YvplibmVnrZKn4gOiULA3OUsuQFkLKKmMSP2eCdMKgX4JHNHqXA4ClhM/XzwT5la
+                        LcU1KQR6pk+56dZiiC36ZSj6wD5u1ZmI0iMzqYEEWBN9vYShCFdD4fFksZ2M8r/P
+                        1xIYC2cCr4yqbVretlySFZYz0Zvd6twHqX6KIAxz39uKu7zihggspycZ0SiPHqkC
+                        MGk61LciYump8rptp/yKqqJDGAbsTShNW5pRV7BP8ZAGsTrIO7tPdfWg+W2wio95
+                        3VfSXLNiq2Zj0+DnIMajGufsL08GHKCMeEECUhyu0JQbCP/KlbUwSVBZJwaSWuTR
+                        I15WMJ+PBWGcMTCOH+EJkJPy5Q49H28=
+                        -----END CERTIFICATE-----
+                    private_key:
+                      inline_string: |
+                        -----BEGIN PRIVATE KEY-----
+                        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyayTNSbOiTZ9o
+                        DbtigKbA2cmDynQ7eKO49arsVgtDkUylvqOjnsGLSNIvEz7b+UW0ROciW/Uail5I
+                        5K8JwgZHKwL0A7DZKIGhXBFc9AUHvLrJSCigIxuK605K59BNvHvHIEf6Zfaaow5t
+                        e+hscsb4XE7zaGyJhQRbRhm/WoYVqXGZNbTXTCWDFAQiHESqWen7pcb58Sge92k4
+                        3DYoBHV8mhjOcIJX3Ox9cHJBqxYvGP+/YuDRramKQpG+8aTWOU+kOsfgXFWge2op
+                        KjQtp1uSYRJSa87cY/FIV43sDw11q+llqLLnl6xe9NPZRjhdJSP3ec6y3R3gndy4
+                        rnMMO+BxAgMBAAECggEATvMqbczXOFKw3xJ0gLn9EAlPKopDtK1FhWrwH3RTt6ps
+                        CEu7jYOKkV+/4iTaA+zh80sqHAIlC4F/BzJqYh8BOCzIOcIIV4+dDRH4fPFd6HaT
+                        EM5la7cdUPOeyXaarkthWlPmhd7oqLTOhZP23UZM1UnDheIHZTL/IoR6kDo2aw66
+                        Bkk7h14+QMxrrjOTDNZG9gm85p25d6biNBJdRm2YT94jRaRSPIKgK+BktOaIeXsR
+                        8MJzDcjX1x6AqgBnRH6WwWbe5Kl4gN2FitB5CtSU40yOQEiJ1IMI+0JG8DoG/f8I
+                        qM0p/7xQcXmuWJqhTJeF47uP4sQavOQqtIs0GVzwoQKBgQDFsIOFLZKJufrdH+hx
+                        KJksJOLIxoKzMtI0Ic5TBOIbUJESG1xGtjkitkaw6FayxbxEZR92+wA3dx9/6fPu
+                        HYi0KmQTAycnGveyaSBgqaCsEaBDiRYD9zYghupQu0eLdvZAqDeN6Bg7MbPYeAdp
+                        dy6TKrGvJWNTG6BSZelJ9dH2owKBgQDnC3u4u4F8cDvbtCxUULr83Xboln03OR5p
+                        UsJPrJt6U6rKWyjtBfLppCFYpHEDS/PmieS/f9ms1N06Sw83a3MjfdB9QSH/d7C3
+                        mx8MjE9JPsfbLEkP6u1KTxAkPUVKRmgzOofJ/s53DswtSdx8xfb3qmBrjiWQSWny
+                        V2EDwm/B2wKBgDtGwTj2wEDB3mHdhnIfzUX6TXIMa/ZVn8f39wjXpwCvuMAoKhQd
+                        4aXx5+J12EFEnz4W4Edp3dfDxVMykGzuuCXlrBozUNMd9/WsJgQ1+LJ/moGFom9P
+                        +g/oxGuurDY6Vn5usjG/zTw6nAWlf/t0vCdunta4rD6oQvtSCZCev/VnAoGBAONx
+                        H3ssQnzAc3yFcjoSOvDgBsVSF7O8K97c1GHgdjHGmVOYx8IE4Cr2IsmDH6lyJIim
+                        6CNH9X25EornBvS0duTSXuJestws9C7aqocMvKRLBC0S/F2KE8vZ5vb1xfcnNj5v
+                        +Op1RsRXMdHHayD9NHB8LWzTwtC2JHCnad5skt2PAoGAWS+DKz8U0DWljqo4QXf4
+                        eMgeTv+izp7k0cM8RCY8XdplsIKWBjegbtj2YHM0Dlr5RhFKnAvXrQBJCHxpYf2Y
+                        7CVLRQr51Yux4TNlI0kGPjhXWfbjMrUGjdv51bDRlju7mWGOhrww2XrjtCl5rBwo
+                        W4+QquG20T1/SvgH/HISN8Q=
+                        -----END PRIVATE KEY-----
+
   clusters:
     - name: greeter_service # name of our java service
       connect_timeout: 0.25s
@@ -56,6 +123,14 @@ static_resources:
                     socket_address:
                       address: host.docker.internal
                       port_value: 9090 # port of the java service
+      # Your grpc server communicates over TLS. You must configure the transport
+      # socket. If you care about the overhead, you should configure the grpc
+      # server to listen without TLS. If you need to listen to grpc-web and grpc
+      # over HTTP/2 both you can also proxy your TCP traffic with the envoy.
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
 layered_runtime:
   layers:
     - name: static_layer_0
