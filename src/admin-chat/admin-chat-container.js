@@ -30,6 +30,7 @@ function AdminChatContainer() {
     }, [])
 
     const onChatUpdateCallback = (chatUpdate) => {
+        console.log("Received chat update: ", chatUpdate)
         if (chatUpdate.hasMessage()) {
             onMessageReceived(chatUpdate.getMessage())
         } else if (chatUpdate.hasReadingstatus()) {
@@ -125,15 +126,21 @@ function AdminChatContainer() {
     }
 
     function onSessionEnd(clientName) {
-        console.log("Session End with client: " + clientName)
-        window.alert("The client " + clientName + " has left the session. Thus, the session is" +
-            " closed.")
-
         let updatedOpenSessions = {...openSessionsDataRef.current}
-        delete updatedOpenSessions[clientName];
-        setOpenSessionsData(updatedOpenSessions)
-        console.log("Updated open sessions data after accepting request")
-        console.log(openSessionsData)
+        let updatedIncomingRequests = incomingRequestsFromClientsRef.current.map(r => r)
+
+        if (clientName in updatedOpenSessions) {
+            console.log("Session End with client: " + clientName)
+            window.alert("The client " + clientName + " has left the session. Thus, the session is" +
+                " closed.")
+            delete updatedOpenSessions[clientName];
+            setOpenSessionsData(updatedOpenSessions)
+            console.log("Updated open sessions data after session closed")
+            console.log(openSessionsData)
+        } else if (updatedIncomingRequests.find(openSessionRequest => openSessionRequest.getFromusername() === clientName) !== undefined) {
+            updatedIncomingRequests.splice (updatedIncomingRequests.findIndex(openSessionRequest => openSessionRequest.getFromusername() === clientName), 1) // remove request
+            setIncomingRequestsFromClients(updatedIncomingRequests)
+        }
     }
 
     const onMessageSentCallback = sentMessage => {
