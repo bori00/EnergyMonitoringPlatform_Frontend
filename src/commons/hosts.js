@@ -1,4 +1,4 @@
 export const HOST = {
-    backend_api: 'http://localhost:8080', //http://energy-utility-backend-bori00.germanywestcentral.azurecontainer.io:8080',
-    grpc_api: 'http://localhost:8081'
+    backend_api: 'https://127.0.0.1:8443',
+    grpc_api: 'https://127.0.0.1:8081'
 };
