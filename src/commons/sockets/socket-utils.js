@@ -5,7 +5,7 @@ import * as HOST from "../hosts";
 import * as AUTH_API from "../authentication/auth-api";
 
 function subscribeToClientDeviceAnomalyNotifications() {
-    var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
+    var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility', {transport: ["wss", "https"]});
     var stompClient = Stomp.over(socket);
 
     stompClient.connect({},
@@ -26,7 +26,7 @@ function subscribeToClientDeviceAnomalyNotifications() {
 }
 
 function subscribeToClientDeviceConsumptionUpdateNotifications (onUpdateCallback) {
-    var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility');
+    var socket = new SockJS(HOST.HOST.backend_api + '/secured/energy-utility', {transport: ["wss", "https"]});
     var stompClient = Stomp.over(socket);
 
     stompClient.connect({},
